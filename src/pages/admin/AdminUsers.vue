@@ -1,6 +1,6 @@
 <template>
   <div class="admin-users-layout">
-    <AdminMenu />
+    <AdminMenu class="mt-8" />
     <div class="admin-users-container">
     <CyberpunkAlert
       :message="alertMsg"
@@ -237,9 +237,10 @@ onMounted(fetchUsers);
   background: #10101a;
   color: #fff;
   padding: 2rem;
+  width: 80%;
   border-radius: 8px;
-  max-width: 1100px;
-  margin: 2rem auto;
+  max-width: 1200px;
+  margin: 2rem 0rem 2rem 0rem;
   box-shadow: 0 0 20px #00ffff33, 0 0 40px #ff00ff22;
 }
 .admin-users-header {
@@ -397,7 +398,120 @@ onMounted(fetchUsers);
   flex-direction: row;
   align-items: flex-start;
   background: none;
+  flex-wrap: wrap;
+  align-content: stretch;
+  justify-content: space-between;
 }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .admin-users-container {
+    width: 95%;
+    padding: 1.2rem;
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-users-layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .admin-users-container {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    min-width: unset;
+    max-width: unset;
+  }
+  .admin-users-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .users-table,
+  .users-table thead,
+  .users-table tbody,
+  .users-table th,
+  .users-table td,
+  .users-table tr {
+    display: block;
+    width: 100%;
+  }
+  .users-table thead {
+    display: none;
+  }
+  .users-table tr {
+    margin-bottom: 1.5rem;
+    background: #181828;
+    border-radius: 6px;
+    box-shadow: 0 0 10px #00ffff22;
+    padding: 1rem 0.5rem;
+  }
+  .users-table td {
+    padding: 0.7rem 0.7rem 0.3rem 0.7rem;
+    border: none;
+    position: relative;
+    text-align: left;
+  }
+  .users-table td:before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.85em;
+    color: #00ffff;
+    margin-bottom: 0.2em;
+    font-weight: bold;
+  }
+  .edit-btn, .delete-btn {
+    margin-bottom: 0.5rem;
+    width: 48%;
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-users-container {
+    padding: 0.5rem;
+  }
+  .modal-content {
+    min-width: 90vw;
+    padding: 1rem 0.5rem;
+  }
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .form-actions button {
+    width: 100%;
+  }
+  .add-user-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .search-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .search-bar input {
+    width: 100%;
+  }
+}
+
+/* ปรับ td ให้รองรับ data-label ใน mobile */
+@media (max-width: 700px) {
+  .users-table td[data-label] {
+    padding-left: 1.2em;
+  }
+}
+
+/* --- End Responsive --- */
 
 /* เดิม */
 </style>
