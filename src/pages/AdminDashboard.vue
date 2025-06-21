@@ -32,7 +32,7 @@
           <div class="card-icon">👤</div>
           <h3>จัดการผู้ใช้</h3>
           <p>จัดการบัญชีผู้ใช้และสิทธิ์การเข้าถึง</p>
-          <button class="action-button">จัดการ</button>
+          <button class="action-button" @click="router.push('/admin/users')">จัดการ</button>
         </div>
         
         <div class="dashboard-card action-card">
@@ -82,7 +82,8 @@ export default {
 
     return {
       username,
-      handleLogout
+      handleLogout,
+      router
     };
   }
 };

@@ -10,6 +10,7 @@ import About from '@/pages/About.vue'
 import NotFound from '@/pages/NotFound.vue'
 import AdminLogin from '@/pages/AdminLogin.vue'
 import AdminDashboard from '@/pages/AdminDashboard.vue'
+import AdminUsers from '@/pages/admin/AdminUsers.vue'
 
 const routes = [
   {
@@ -48,6 +49,12 @@ const routes = [
     path: '/admin/dashboard',
     name: 'AdminDashboard',
     component: AdminDashboard,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/users',
+    name: 'AdminUsers',
+    component: AdminUsers,
     meta: { requiresAuth: true }
   },
   {

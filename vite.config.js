@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import { fileURLToPath } from "node:url";
+import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -25,7 +25,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@": path.resolve(__dirname, "src"),
     },
   },
 });
