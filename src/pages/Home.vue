@@ -60,7 +60,6 @@
             <NeonButton color="pink" size="sm">VIEW_ALL</NeonButton>
           </router-link>
         </div>
-        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <PostCard v-for="post in gamePosts" :key="post.slug" :post="post" />
         </div>
@@ -123,15 +122,15 @@ import NeonExplosion from '@/components/NeonExplosion.vue'
 const posts = ref([])
 
 const gamePosts = computed(() => {
-  return posts.value.filter(post => post.tags && post.tags.includes('game')).slice(0, 3)
+  return posts.value.filter(post => post.tags && post.tags.map(t => t.name).includes('game')).slice(0, 3)
 })
 
 const codePosts = computed(() => {
-  return posts.value.filter(post => post.tags && post.tags.includes('code')).slice(0, 3)
+  return posts.value.filter(post => post.tags && post.tags.map(t => t.name).includes('code')).slice(0, 3)
 })
 
 const lifePosts = computed(() => {
-  return posts.value.filter(post => post.tags && post.tags.includes('life')).slice(0, 3)
+  return posts.value.filter(post => post.tags && post.tags.map(t => t.name).includes('life')).slice(0, 3)
 })
 
 // Audio for hover effect

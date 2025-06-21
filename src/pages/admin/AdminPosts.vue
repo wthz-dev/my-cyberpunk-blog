@@ -35,7 +35,7 @@
             <td>{{ post.title }}</td>
             <td>{{ post.slug }}</td>
             <td><img :src="post.image" alt="Image" width="50" height="50" /></td>
-            <td>{{ post.tags?.join(', ') }}</td>
+            <td>{{ post.tags.map(t => t.name).join(', ') }}</td>
             <td>{{ post.published ? 'เผยแพร่' : 'ไม่เผยแพร่' }}</td>
             <td>
               <button class="edit-btn" @click="openEditPost(post)">แก้ไข</button>
@@ -73,19 +73,29 @@
             <textarea v-model="postForm.content" rows="6" required placeholder="เช่น บทความนี้เกี่ยวกับ Cyberpunk 2025"></textarea>
           </div>
           <div class="form-group">
-            <label>แท็ก (คั่นด้วย comma)</label>
-            <input v-model="tagsInput" @blur="parseTags" @keyup.enter="parseTags" type="text" placeholder="เช่น tech,vue,cyberpunk" />
+            <label>แท็ก</label>
+           <!-- {{postForm.tags}} -->
+            <div class="tag-select-wrapper">
+              <select v-model="postForm.tags" multiple class="cyberpunk-multiselect">
+                <option v-for="tag in tags" :key="tag.id" :value="tag.id">{{ tag.name }}</option>
+              </select>
+              <div class="selected-tags" v-if="postForm.tags.length">
+                <span v-for="tag in postForm.tags" :key="tag.id" class="tag-badge">
+                  {{ tags.find(t => t.id === tag)?.name }}
+                </span>
+              </div>
+            </div>
           </div>
           <div class="form-group">
-  <div class="flex items-center">
-    <span>เผยแพร่</span>
-    <label class="relative inline-flex items-center cursor-pointer ml-2">
-      <input type="checkbox" v-model="postForm.published" class="sr-only peer">
-      <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-cyan-500 transition-colors duration-300"></div>
-      <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 peer-checked:translate-x-5"></div>
-    </label>
-  </div>
-</div>
+            <div class="flex items-center">
+              <span>เผยแพร่</span>
+              <label class="relative inline-flex items-center cursor-pointer ml-2">
+                <input type="checkbox" v-model="postForm.published" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-cyan-500 transition-colors duration-300"></div>
+                <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 peer-checked:translate-x-5"></div>
+              </label>
+            </div>
+          </div>
           <div class="form-actions">
             <button type="submit">{{ editMode ? 'บันทึก' : 'เพิ่ม' }}</button>
             <button type="button" @click="closeModal">ยกเลิก</button>
@@ -106,6 +116,7 @@ import {
   updatePost,
   deletePost
 } from '@/services/postService';
+import { getAllTags } from '@/services/tagService';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import AdminMenu from '@/components/AdminMenu.vue';
@@ -116,6 +127,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const posts = ref([]);
+const tags = ref([]);
 const page = ref(1);
 const limit = ref(10);
 const hasMore = ref(false);
@@ -126,7 +138,6 @@ const confirmType = ref('warning');
 const confirmVisible = ref(false);
 const editMode = ref(false);
 const postForm = ref({ title: '', slug: '', content: '',published: false, tags: [] ,image: '' });
-const tagsInput = ref('');
 const alertMsg = ref('');
 const alertType = ref('success');
 const alertVisible = ref(false);
@@ -148,28 +159,33 @@ const fetchPosts = async () => {
   hasMore.value = (res.data?.posts?.length || res.data?.length || 0) === limit.value;
 };
 
+const fetchTags = async () => {
+  const res = await getAllTags({ page: 1, limit: 100 });
+  tags.value = res.tags;
+};
+
 const nextPage = () => { page.value++; fetchPosts(); };
 const prevPage = () => { if (page.value > 1) { page.value--; fetchPosts(); } };
 
 const openAddPost = () => {
   editMode.value = false;
   postForm.value = { title: '', slug: '', content: '',published: false, tags: [], image: '' };
-  tagsInput.value = '';
   showModal.value = true;
 };
 const openEditPost = async (post) => {
   editMode.value = true;
   const res = await getPostBySlug(post.slug);
-  postForm.value = { ...res.data, tags: res.data.tags || [] ,published: res.data.published ,image: res.data.image };
-  tagsInput.value = postForm.value.tags.join(', ');
+  
+  postForm.value = {
+    ...res.data,
+    tags: res.data?.tags?.map(t => t.id),
+    published: res.data.published,
+    image: res.data.image
+  };
   showModal.value = true;
 };
 const closeModal = () => { showModal.value = false; };
-const parseTags = () => {
-  postForm.value.tags = tagsInput.value.split(',').map(t => t.trim()).filter(Boolean);
-};
 const addPost = async () => {
-  parseTags();
   try {
     await createPost({ ...postForm.value });
     showModal.value = false;
@@ -181,7 +197,6 @@ const addPost = async () => {
 };
 const updatePostForm = async () => {
 try {
-  parseTags();
   await updatePost(postForm.value.slug, { ...postForm.value });
   showModal.value = false;
   fetchPosts();
@@ -213,10 +228,63 @@ const onConfirm = () => {
   confirmVisible.value = false;
 };
 
-onMounted(fetchPosts);
+onMounted(() => {
+  fetchPosts();
+  fetchTags();
+});
+
 </script>
 
 <style scoped>
+.tag-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cyberpunk-multiselect {
+  background: #181828;
+  color: #00ffff;
+  border: 1.5px solid #00ffff;
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+  font-size: 1rem;
+  min-height: 42px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 8px #00ffff22;
+  appearance: none;
+  scrollbar-width: thin;
+  scrollbar-color: #00ffff #181828;
+}
+.cyberpunk-multiselect:focus {
+  border-color: #ff00ff;
+  box-shadow: 0 0 0 2px #ff00ff55;
+}
+.cyberpunk-multiselect option {
+  background: #181828;
+  color: #00ffff;
+  padding: 0.4rem 0.7rem;
+  border-radius: 2px;
+}
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+.tag-badge {
+  background: linear-gradient(90deg,#00ffff,#ff00ff);
+  color: #181828;
+  border-radius: 12px;
+  padding: 0.2rem 0.8rem;
+  font-size: 0.95em;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 6px #00ffff55;
+  border: 1.5px solid #00ffff;
+  user-select: none;
+}
+
 .admin-posts-layout {
     display: flex;
   flex-direction: row;
