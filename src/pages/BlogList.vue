@@ -95,15 +95,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Calendar, ChevronRight } from 'lucide-vue-next'
-import posts from '@/data/posts.json'
+import { getPosts } from '@/services/postService'
 
+const posts = ref([])
 const selectedTag = ref(null)
 
 const allTags = computed(() => {
   const tags = new Set()
-  posts.forEach(post => {
+  posts.value.forEach(post => {
     post.tags.forEach(tag => tags.add(tag))
   })
   return Array.from(tags)
@@ -112,5 +113,14 @@ const allTags = computed(() => {
 const filteredPosts = computed(() => {
   if (!selectedTag.value) return posts
   return posts.filter(post => post.tags.includes(selectedTag.value))
+})
+
+onMounted(async () => {
+  try {
+    const res = await getPosts()
+    posts.value = Array.isArray(res.data) ? res.data : res.data.posts || []
+  } catch (e) {
+    console.error('ไม่สามารถโหลดโพสต์:', e)
+  }
 })
 </script>
