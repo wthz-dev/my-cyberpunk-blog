@@ -6,7 +6,7 @@ dotenv.config();
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  server: { host: true, port: process.env.VITE_WEB_PORT },
+  server: { host: true, port: process.env.VITE_WEB_PORT || 3000 },
   plugins: [vue()],
   css: {
     preprocessorOptions: {
