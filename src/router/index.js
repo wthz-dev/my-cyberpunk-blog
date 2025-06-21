@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isLoggedIn } from '../services/authService'
 
 // Import pages
 import Home from '@/pages/Home.vue'
@@ -7,6 +8,8 @@ import Post from '@/pages/Post.vue'
 import TagPosts from '@/pages/TagPosts.vue'
 import About from '@/pages/About.vue'
 import NotFound from '@/pages/NotFound.vue'
+import AdminLogin from '@/pages/AdminLogin.vue'
+import AdminDashboard from '@/pages/AdminDashboard.vue'
 
 const routes = [
   {
@@ -37,6 +40,17 @@ const routes = [
     props: true
   },
   {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: AdminLogin
+  },
+  {
+    path: '/admin/dashboard',
+    name: 'AdminDashboard',
+    component: AdminDashboard,
+    meta: { requiresAuth: true }
+  },
+  {
     // 404 page
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
@@ -50,6 +64,21 @@ const router = createRouter({
   scrollBehavior() {
     // Always scroll to top
     return { top: 0 }
+  }
+})
+
+// Navigation guard to check authentication for routes that require it
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+      // Redirect to login page if not logged in
+      next({ name: 'AdminLogin' })
+    } else {
+      next() // Allow access if logged in
+    }
+  } else {
+    next() // Allow access for routes that don't require auth
   }
 })
 
