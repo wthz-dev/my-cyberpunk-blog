@@ -18,14 +18,14 @@
           <div class="card-icon">📝</div>
           <h3>จัดการบทความ</h3>
           <p>เพิ่ม แก้ไข หรือลบบทความในบล็อก</p>
-          <button class="action-button">จัดการ</button>
+          <button class="action-button" @click="router.push('/admin/posts')">จัดการ</button>
         </div>
         
         <div class="dashboard-card action-card">
           <div class="card-icon">🏷️</div>
           <h3>จัดการแท็ก</h3>
           <p>เพิ่ม แก้ไข หรือลบแท็กสำหรับบทความ</p>
-          <button class="action-button">จัดการ</button>
+          <button class="action-button" @click="router.push('/admin/tags')">จัดการ</button>
         </div>
         
         <div class="dashboard-card action-card">

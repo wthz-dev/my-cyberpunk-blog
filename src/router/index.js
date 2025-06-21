@@ -11,6 +11,7 @@ import NotFound from '@/pages/NotFound.vue'
 import AdminLogin from '@/pages/AdminLogin.vue'
 import AdminDashboard from '@/pages/AdminDashboard.vue'
 import AdminUsers from '@/pages/admin/AdminUsers.vue'
+import AdminPosts from '@/pages/admin/AdminPosts.vue'
 
 const routes = [
   {
@@ -55,6 +56,12 @@ const routes = [
     path: '/admin/users',
     name: 'AdminUsers',
     component: AdminUsers,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/posts',
+    name: 'AdminPosts',
+    component: AdminPosts,
     meta: { requiresAuth: true }
   },
   {
