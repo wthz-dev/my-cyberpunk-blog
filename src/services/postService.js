@@ -2,7 +2,7 @@ import api from './api';
 
 // ผู้ใช้ทั่วไป
 export const getPosts = (params) => api.get('/posts', { params });
-export const getPostBySlug = (slug) => api.get(`/posts/get-post-by-slug/${slug}`);
+export const getPostBySlug = (slug) => api.get(`/posts/${slug}`);
 export const getPostsByTag = (tag, params) => api.get(`/posts/tag/${tag}`, { params });
 export const getTags = () => api.get('/posts/tags');
 export const createPost = (data) => api.post('/posts', data);

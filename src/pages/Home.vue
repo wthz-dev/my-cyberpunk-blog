@@ -112,27 +112,45 @@ import { ref, computed, onMounted } from 'vue'
 import { Terminal } from 'lucide-vue-next'
 import NeonButton from '@/components/NeonButton.vue'
 import PostCard from '@/components/PostCard.vue'
-import posts from '@/data/posts.json'
+// import posts from '@/data/posts.json'
+import { getPosts } from '@/services/postService'
+// หรือถ้าไม่มี postService.js ให้ใช้ axios
+// import axios from 'axios'
 import NeonExplosion from '@/components/NeonExplosion.vue'
 
 
-// Filter posts by tag
+// ดึงข้อมูลโพสต์จาก API
+const posts = ref([])
+
 const gamePosts = computed(() => {
-  return posts.filter(post => post.tags.includes('game')).slice(0, 3)
+  return posts.value.filter(post => post.tags && post.tags.includes('game')).slice(0, 3)
 })
 
 const codePosts = computed(() => {
-  return posts.filter(post => post.tags.includes('code')).slice(0, 3)
+  return posts.value.filter(post => post.tags && post.tags.includes('code')).slice(0, 3)
 })
 
 const lifePosts = computed(() => {
-  return posts.filter(post => post.tags.includes('life')).slice(0, 3)
+  return posts.value.filter(post => post.tags && post.tags.includes('life')).slice(0, 3)
 })
 
 // Audio for hover effect
 let hoverSound = null
 
 onMounted(async () => {
+  // ดึงโพสต์จาก API
+  try {
+    // ถ้ามี postService.js
+    const res = await getPosts()
+    posts.value = Array.isArray(res.data) ? res.data : res.data.posts || []
+    // ถ้าใช้ axios ตรง ๆ
+    // const res = await axios.get('/api/posts')
+    // posts.value = res.data
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('ไม่สามารถโหลดโพสต์:', e)
+  }
+
   // Create audio element for hover sound
   hoverSound = new Audio()
   hoverSound.src = 'src/assets/cyberpunk-2077-sandevistan-start-made-with-Voicemod.mp3'

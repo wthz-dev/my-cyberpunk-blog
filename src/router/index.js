@@ -4,7 +4,6 @@ import { isLoggedIn } from '../services/authService'
 // Import pages
 import Home from '@/pages/Home.vue'
 import BlogList from '@/pages/BlogList.vue'
-import Post from '@/pages/Post.vue'
 import TagPosts from '@/pages/TagPosts.vue'
 import About from '@/pages/About.vue'
 import NotFound from '@/pages/NotFound.vue'
@@ -12,6 +11,7 @@ import AdminLogin from '@/pages/AdminLogin.vue'
 import AdminDashboard from '@/pages/AdminDashboard.vue'
 import AdminUsers from '@/pages/admin/AdminUsers.vue'
 import AdminPosts from '@/pages/admin/AdminPosts.vue'
+import Post from '@/pages/blog/Slug.vue'
 
 const routes = [
   {
