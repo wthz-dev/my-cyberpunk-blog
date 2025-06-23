@@ -4,6 +4,7 @@
     <router-link to="/admin/users" class="admin-menu-link" active-class="active">จัดการผู้ใช้</router-link>
     <router-link to="/admin/posts" class="admin-menu-link" active-class="active">จัดการบทความ</router-link>
     <router-link to="/admin/tags" class="admin-menu-link" active-class="active">จัดการแท็ก</router-link>
+    <router-link to="/admin/settings" class="admin-menu-link" active-class="active">ตั้งค่าเว็บไซต์</router-link>
     <!-- เพิ่มเมนูอื่นๆ ได้ที่นี่ -->
   </nav>
 </template>
