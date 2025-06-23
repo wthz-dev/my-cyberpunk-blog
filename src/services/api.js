@@ -1,12 +1,10 @@
 import axios from 'axios';
 import { getActivePinia } from 'pinia';
-import dotenv from 'dotenv';
-dotenv.config();
 
-const API_URL = process.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL+"/api";
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: apiUrl,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
