@@ -57,8 +57,8 @@ export default {
     const router = useRouter();
     const authStore = useAuthStore();
     
-    const email = ref('torkait.s');
-    const password = ref('10203040');
+    const email = ref('');
+    const password = ref('');
     
     // Use computed properties to access store state
     const error = computed(() => authStore.error);
