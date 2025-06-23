@@ -9,7 +9,7 @@
       <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-cyber-dark opacity-50"></div>
       <div class="absolute top-2 right-2">
         <span class="bg-cyber-dark px-2 py-1 text-xs font-share-tech-mono text-cyber-blue border border-cyber-blue">
-          {{ post.date }}
+          {{ dayjs(post.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </span>
       </div>
     </div>
@@ -21,7 +21,7 @@
           :to="`/tags/${tag}`" 
           class="text-xs font-share-tech-mono text-cyber-pink hover:text-cyber-blue transition-colors"
         >
-          #{{ tag }}
+          #{{ tag.name }}
         </router-link>
       </div>
       <h3 class="font-orbitron text-xl mb-3 line-clamp-2">{{ post.title }}</h3>
@@ -38,6 +38,7 @@
 
 <script setup>
 import NeonButton from './NeonButton.vue'
+import dayjs from 'dayjs';
 
 defineProps({
   post: {
