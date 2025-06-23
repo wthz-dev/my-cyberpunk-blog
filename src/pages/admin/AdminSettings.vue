@@ -102,11 +102,13 @@
 import { ref, onMounted } from 'vue';
 import { fetchSettings, updateSettings, resetSettings } from '@/services/settingsService';
 import { useAuthStore } from '@/stores/auth';
+import { useSettingsStore } from '@/stores/settings';
 import CyberpunkAlert from '@/components/CyberpunkAlert.vue';
 import CyberpunkAlertConfirm from '@/components/CyberpunkAlertConfirm.vue';
 import AdminMenu from '@/components/AdminMenu.vue';
 
 const authStore = useAuthStore();
+const settingsStore = useSettingsStore();
 
 const form = ref({
   siteName: '',
@@ -154,6 +156,7 @@ const onSave = async () => {
   try {
     await updateSettings(form.value);
     authStore.fetchUserInfo();
+    await settingsStore.refreshSettings(); // รีเฟรช settings กลางทันที
     success.value = true;
   } catch (e) {
     error.value = 'บันทึกไม่สำเร็จ';
