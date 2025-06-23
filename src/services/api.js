@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getActivePinia } from 'pinia';
+import progress from '@/utils/progress';
 
-const apiUrl = import.meta.env.VITE_API_URL+"/api";
+const apiUrl = import.meta.env.VITE_API_URL + "/api";
 
 const api = axios.create({
   baseURL: apiUrl,
@@ -11,18 +12,24 @@ const api = axios.create({
   }
 });
 
+// Progress bar for API requests
+let requestsInProgress = 0;
+
 api.interceptors.request.use(
   (config) => {
     if (config.url === '/auth/refresh') {
       return config;
     }
-    
+    // Show progress bar on first request
+    if (requestsInProgress === 0) {
+      progress.start();
+    }
+    requestsInProgress++;
+
     const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
-    
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    
     return config;
   },
   (error) => {
@@ -32,25 +39,29 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
+    requestsInProgress--;
+    if (requestsInProgress <= 0) {
+      progress.finish();
+      requestsInProgress = 0;
+    }
     return response;
   },
   async (error) => {
     const originalRequest = error.config;
-    
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
       originalRequest.url !== '/auth/refresh'
     ) {
       originalRequest._retry = true;
-      
+
       try {
         const refreshToken = localStorage.getItem('refreshToken');
-       
         if (!refreshToken) {
           throw new Error('No refresh token available');
         }
-        
+
         const response = await api.post('/auth/refresh', { refreshToken });
 
         const accessToken = response.data.accessToken;
@@ -83,13 +94,8 @@ api.interceptors.response.use(
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        
-        window.location.href = '/admin/login';
-        
-        return Promise.reject(refreshError);
       }
     }
-    
     return Promise.reject(error);
   }
 );

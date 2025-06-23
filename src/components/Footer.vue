@@ -1,11 +1,12 @@
 <template>
   <footer class="border-t border-cyber-blue bg-cyber-dark py-8">
     <div class="container mx-auto px-4">
+      <!-- ใช้ settings จาก props/inject -->
       <!-- Desktop Footer Layout -->
       <div class="hidden md:flex md:flex-row justify-between items-start mb-8">
         <div class="mb-6 md:mb-0">
-          <h2 class="font-orbitron text-xl font-bold text-cyber-blue mb-4">WTHZ_BLOG</h2>
-          <p class="font-share-tech-mono text-sm text-cyber-gray max-w-xs">// Exploring the digital frontier of tomorrow with the latest in cybernetic enhancements and neural interfaces.</p>
+          <h2 class="font-orbitron text-xl font-bold text-cyber-blue mb-4">{{ siteName }}</h2>
+          <p class="font-share-tech-mono text-sm text-cyber-gray max-w-xs">{{ description }}</p>
         </div>
         
         <div class="grid grid-cols-2 gap-x-12 gap-y-6">
@@ -91,7 +92,7 @@
       
       <!-- Copyright Section - Both Mobile and Desktop -->
       <div class="border-t border-cyber-gray pt-6 mt-6 text-center">
-        <p class="font-share-tech-mono text-sm text-cyber-gray">&copy; {{ new Date().getFullYear() }} WTHZ_BLOG. All rights reserved.</p>
+        <p class="font-share-tech-mono text-sm text-cyber-gray">&copy; {{ new Date().getFullYear() }} {{ siteName }}. {{ copyrightText }}</p>
         <div class="mt-2 text-xs font-share-tech-mono text-cyber-gray flex justify-center items-center">
           <span class="inline-block h-2 w-2 rounded-full bg-cyber-blue mr-2 relative">
             <span class="absolute inset-0 h-full w-full rounded-full bg-cyber-blue animate-ping opacity-75"></span>
@@ -104,8 +105,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { ChevronDown, ChevronUp } from 'lucide-vue-next'
+
+const props = defineProps({
+  settings: { type: Object, default: null }
+})
+const injectedSettings = inject('settings', null)
+const useSettings = computed(() => props.settings || injectedSettings || {})
+
+const siteName = computed(() => useSettings.value.siteName || 'WTHZ_BLOG')
+const description = computed(() => useSettings.value.siteDescription || '// Exploring the digital frontier of tomorrow with the latest in cybernetic enhancements and neural interfaces.')
+const facebookUrl = computed(() => useSettings.value.facebookUrl || '')
+const twitterUrl = computed(() => useSettings.value.twitterUrl || '')
+const lineUrl = computed(() => useSettings.value.lineUrl || '')
+const copyrightText = computed(() => useSettings.value.copyrightText || 'All rights reserved.')
 
 const isFooterMenuOpen = ref(false)
 

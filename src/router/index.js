@@ -13,6 +13,7 @@ import AdminUsers from '@/pages/admin/AdminUsers.vue'
 import AdminPosts from '@/pages/admin/AdminPosts.vue'
 import AdminTags from '@/pages/admin/AdminTags.vue'
 import Post from '@/pages/blog/Slug.vue'
+import AdminSettings from '@/pages/admin/AdminSettings.vue'
 
 const routes = [
   {
@@ -69,6 +70,12 @@ const routes = [
     path: '/admin/tags',
     name: 'AdminTags',
     component: AdminTags,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin/settings',
+    name: 'AdminSettings',
+    component: AdminSettings,
     meta: { requiresAuth: true }
   },
   {

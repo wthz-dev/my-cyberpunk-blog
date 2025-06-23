@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import api from '../services/api';
+import api from '@/services/api';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -78,11 +78,11 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = data.refreshToken;
       this.user = data.user || null;
       
-      console.log('Auth data received:', { 
-        token: this.accessToken, 
-        refreshToken: this.refreshToken, 
-        user: this.user 
-      });
+      // console.log('Auth data received:', { 
+      //   token: this.accessToken, 
+      //   refreshToken: this.refreshToken, 
+      //   user: this.user 
+      // });
       
       // Save to localStorage
       if (this.accessToken) {

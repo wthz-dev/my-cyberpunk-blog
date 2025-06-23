@@ -39,7 +39,7 @@
           <div class="card-icon">⚙️</div>
           <h3>ตั้งค่าเว็บไซต์</h3>
           <p>ปรับแต่งการตั้งค่าทั่วไปของเว็บไซต์</p>
-          <button class="action-button">จัดการ</button>
+          <button class="action-button" @click="router.push('/admin/settings')">จัดการ</button>
         </div>
       </div>
     </div>

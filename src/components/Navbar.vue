@@ -1,7 +1,10 @@
 <template>
   <header class="border-b border-cyber-blue bg-cyber-dark">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <router-link to="/" class="cyber-glitch font-orbitron text-2xl md:text-3xl font-bold" data-text="WHITE'S CYBERPUNK BLOG">WHITE'S CYBERPUNK BLOG </router-link>
+      <router-link to="/" class="cyber-glitch font-orbitron text-2xl md:text-3xl font-bold flex items-center" :data-text="siteName">
+        <img v-if="logoUrl" :src="logoUrl" alt="logo" class="h-9 w-9 mr-2 rounded-full object-contain" />
+        {{ siteName }}
+      </router-link>
       
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex space-x-6">
@@ -45,8 +48,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { Menu, X, ChevronRight } from 'lucide-vue-next'
+
+const props = defineProps({
+  settings: { type: Object, default: null }
+})
+const injectedSettings = inject('settings', null)
+const useSettings = computed(() => props.settings || injectedSettings || {})
+
+const siteName = computed(() => useSettings.value.siteName || "WHITE'S CYBERPUNK BLOG")
+const logoUrl = computed(() => useSettings.value.logoUrl || "")
+const themeColor = computed(() => useSettings.value.themeColor || "#00ffff")
+const darkMode = computed(() => useSettings.value.darkMode || false)
 
 const isMobileMenuOpen = ref(false)
 </script>
