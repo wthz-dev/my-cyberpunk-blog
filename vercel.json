@@ -10,5 +10,8 @@
       "destination": "https://www.wthz-blog.site/:path*",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
