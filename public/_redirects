@@ -1,3 +1,0 @@
-# Redirect domain aliases to primary domain
-https://wthz-blog.site/* https://www.wthz-blog.site/:splat 301!
-
