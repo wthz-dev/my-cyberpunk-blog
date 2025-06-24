@@ -1,12 +1,13 @@
 {
   "redirects": [
     {
-      "source": "https://wthz-blog.site/:path*",
-      "destination": "https://www.wthz-blog.site/:path*",
-      "permanent": true
-    },
-    {
-      "source": "http://wthz-blog.site/:path*",
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "wthz-blog.site"
+        }
+      ],
       "destination": "https://www.wthz-blog.site/:path*",
       "permanent": true
     }
