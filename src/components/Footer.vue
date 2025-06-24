@@ -16,6 +16,7 @@
               <li><router-link to="/" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">HOME</router-link></li>
               <li><router-link to="/blog" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">BLOG</router-link></li>
               <li><router-link to="/about" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">ABOUT</router-link></li>
+              <li><router-link to="/privacy-policy" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">PRIVACY POLICY</router-link></li>
             </ul>
           </div>
           <div>
@@ -61,6 +62,7 @@
               <li><router-link to="/" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">HOME</router-link></li>
               <li><router-link to="/blog" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">BLOG</router-link></li>
               <li><router-link to="/about" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">ABOUT</router-link></li>
+              <li><router-link to="/privacy-policy" class="font-share-tech-mono text-cyber-gray hover:text-cyber-blue transition-colors text-sm">PRIVACY POLICY</router-link></li>
             </ul>
           </div>
           

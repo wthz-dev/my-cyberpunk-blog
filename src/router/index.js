@@ -14,6 +14,7 @@ import AdminPosts from '@/pages/admin/AdminPosts.vue'
 import AdminTags from '@/pages/admin/AdminTags.vue'
 import Post from '@/pages/blog/Slug.vue'
 import AdminSettings from '@/pages/admin/AdminSettings.vue'
+import PrivacyPolicy from '@/pages/PrivacyPolicy.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: PrivacyPolicy
   },
   {
     path: '/tags/:tag',
