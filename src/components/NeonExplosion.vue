@@ -16,13 +16,24 @@
   </template>
   
   <script setup>
-  import { onMounted } from 'vue'
-  import { loadFull } from 'tsparticles'
-  import { tsParticles } from 'tsparticles-engine'
-  
-  onMounted(async () => {
+import { onMounted, ref } from 'vue'
+
+// ใช้การนำเข้าแบบ dynamic import เพื่อหลีกเลี่ยงปัญหา SSR และ version mismatch
+const isParticlesLoaded = ref(false)
+
+onMounted(async () => {
+  try {
+    // นำเข้าทั้งสองโมดูลพร้อมกัน
+    const [particles, { loadFull }] = await Promise.all([
+      import('tsparticles-engine'),
+      import('tsparticles')
+    ])
+    
+    const tsParticles = particles.tsParticles
     await loadFull(tsParticles)
-    tsParticles.load("particles-container", {
+    isParticlesLoaded.value = true
+    
+    await tsParticles.load("particles-container", {
       particles: {
         number: { value: 0 },
         color: { value: ["#00fff7", "#f6019d", "#fffb00"] },
@@ -37,10 +48,18 @@
         }
       }
     })
-  })
-  
-  const triggerExplosion = () => {
+  } catch (error) {
+    console.error('ไม่สามารถโหลด particles:', error)
+  }
+})
+
+const triggerExplosion = async () => {
+  try {
+    if (!isParticlesLoaded.value) return
+    
+    const { tsParticles } = await import('tsparticles-engine')
     const particlesInstance = tsParticles.domItem(0)
+    
     if (particlesInstance) {
       particlesInstance.particles.push(50, {
         position: {
@@ -49,7 +68,10 @@
         }
       })
     }
+  } catch (error) {
+    console.error('เกิดข้อผิดพลาดในการสร้าง explosion:', error)
   }
+}
   </script>
   
   <style scoped>
