@@ -1,7 +1,41 @@
 <template>
   <div>
     <!-- Hero Section with Cyberpunk Effects -->
-    <CyberpunkHero />
+    <section class="py-12 md:py-20 relative overflow-hidden cyberpunk-bg">
+      <!-- Scanline Overlay -->
+      <div class="scanlines"></div>
+      
+      <!-- Radial Gradient Background -->
+      <div class="radial-bg"></div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <div class="cyber-logo-container mb-6" @mouseenter="playHoverSound">
+          <NeonExplosion />
+          <div class="cyber-circuit"></div>
+          </div>
+          <!-- Animated Logo -->
+          <!-- <div class="cyber-logo-container mb-6" @mouseenter="playHoverSound">
+            <h1 class="cyber-logo font-orbitron text-4xl md:text-6xl font-bold">
+              <span class="text-cyber-blue glitch-text" data-text="WHITE'S">WHITE'S</span>
+              <span class="text-cyber-pink glitch-text" data-text="CYBERPUNK">CYBERPUNK</span>
+              <span class="text-white glitch-text" data-text="BLOG"> BLOG</span>
+            </h1>
+            <div class="cyber-circuit"></div>
+          </div> -->
+          
+          <p class="font-share-tech-mono text-xl md:text-2xl mb-8 cyber-text">// Exploring the digital frontier of tomorrow</p>
+         
+          <!-- <div class="pulse-container">
+            <NeonButton color="blue" size="lg" class="pulse-button">
+              <span class="flex items-center">
+                <Terminal class="mr-2 h-5 w-5 terminal-icon" />
+                JACK IN
+              </span>
+            </NeonButton>
+          </div> -->
+        </div>
+      </div>
       
       <!-- Decorative elements with animation -->
       <div class="absolute top-0 left-0 w-full h-full opacity-10">
@@ -12,7 +46,7 @@
       
       <!-- Futuristic Pattern Elements -->
       <div class="cyber-grid"></div>
-   
+    </section>
 
     <!-- Game Section -->
     <section class="py-12 bg-cyber-dark">
@@ -73,7 +107,6 @@
 </template>
 
 <script setup>
-import CyberpunkHero from '@/components/CyberpunkHero.vue'
 import { ref, computed, onMounted } from 'vue'
 import { Terminal } from 'lucide-vue-next'
 import NeonButton from '@/components/NeonButton.vue'
