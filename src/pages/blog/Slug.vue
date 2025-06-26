@@ -40,9 +40,9 @@
         
         <!-- AI Comment Bot -->
         <div class="mt-12">
-          <h3 class="font-orbitron text-2xl mb-6">
+          <h2 class="font-orbitron text-2xl mb-6">
             <span class="text-cyber-blue">//</span> COMMENTS
-          </h3>
+          </h2>
           
           <div class="cyber-card p-6 mb-8">
             <div class="flex items-start gap-4">
@@ -51,7 +51,7 @@
               </div>
               <div class="flex-1">
                 <div class="flex items-center mb-2">
-                  <h4 class="font-orbitron text-cyber-blue">NEXUS-7 AI</h4>
+                  <h3 class="font-orbitron text-cyber-blue">NEXUS-7 AI</h3>
                   <span class="ml-2 text-xs bg-cyber-blue text-cyber-dark px-2 py-0.5 rounded">BOT</span>
                 </div>
                 <p class="font-share-tech-mono text-cyber-gray mb-4">
