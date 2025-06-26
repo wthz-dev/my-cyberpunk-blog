@@ -119,16 +119,39 @@ watch(post, (val) => {
   useHead({
     title: val.data.title || 'Blog Post',
     meta: [
-      { name: 'description', content: val.data.description || val.data.title || '' },
+      // ใช้ keyword หลักของบทความใน title/description
+      { name: 'description', content: (val.data.description || val.data.title || '') + ' | ' + (val.data.tags?.map(t => t.name).join(', ') || '') },
       { property: 'og:title', content: val.data.title || '' },
-      { property: 'og:description', content: val.data.description || val.data.title || '' },
+      { property: 'og:description', content: (val.data.description || val.data.title || '') + ' | ' + (val.data.tags?.map(t => t.name).join(', ') || '') },
       { property: 'og:image', content: val.data.image || '' },
       { property: 'og:type', content: 'article' },
       { property: 'og:url', content: typeof window !== 'undefined' ? window.location.href : '' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: val.data.title || '' },
-      { name: 'twitter:description', content: val.data.description || val.data.title || '' },
+      { name: 'twitter:description', content: (val.data.description || val.data.title || '') + ' | ' + (val.data.tags?.map(t => t.name).join(', ') || '') },
       { name: 'twitter:image', content: val.data.image || '' },
+    ],
+    script: [
+      {
+        type: 'application/ld+json',
+        children: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: val.data.title,
+          description: val.data.description || val.data.title,
+          image: val.data.image,
+          datePublished: val.data.createdAt,
+          author: {
+            '@type': 'Person',
+            name: 'WTHZ Blog'
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': typeof window !== 'undefined' ? window.location.href : ''
+          },
+          keywords: val.data.tags?.map(t => t.name).join(', ')
+        })
+      }
     ]
   })
 }, { immediate: true })
