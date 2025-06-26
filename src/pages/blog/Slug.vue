@@ -25,11 +25,16 @@
         
         <!-- Featured Image -->
         <div class="mb-8 relative">
-          <img 
-            :src="post.data.image" 
-            :alt="post.data.title" 
-            class="w-full md:h-[600px] xl:h-[600px] h-[600px] object-cover rounded" 
-          />
+          <picture>
+            <source v-if="post.data.imageWebp" :srcset="post.data.imageWebp" type="image/webp">
+            <img 
+              :src="post.data.image" 
+              :alt="post.data.title" 
+              width="1200" height="600"
+              class="w-full md:h-[600px] xl:h-[600px] h-[600px] object-cover rounded" 
+              loading="lazy"
+            />
+          </picture>
           <div class="absolute inset-0 border border-cyber-blue opacity-50 rounded"></div>
         </div>
         
@@ -119,7 +124,6 @@ watch(post, (val) => {
   useHead({
     title: val.data.title || 'Blog Post',
     meta: [
-      // ใช้ keyword หลักของบทความใน title/description
       { name: 'description', content: (val.data.description || val.data.title || '') + ' | ' + (val.data.tags?.map(t => t.name).join(', ') || '') },
       { property: 'og:title', content: val.data.title || '' },
       { property: 'og:description', content: (val.data.description || val.data.title || '') + ' | ' + (val.data.tags?.map(t => t.name).join(', ') || '') },
@@ -152,9 +156,19 @@ watch(post, (val) => {
           keywords: val.data.tags?.map(t => t.name).join(', ')
         })
       }
-    ]
+    ],
+    link: [
+      val.data.image ? {
+        rel: 'preload',
+        as: 'image',
+        href: val.data.image,
+        type: 'image/jpeg'
+      } : null
+    ].filter(Boolean)
   })
 }, { immediate: true })
+
+
 
 const md = new MarkdownIt({
     html: true,
