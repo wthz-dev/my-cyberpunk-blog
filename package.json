@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.2.2",
+    "@vueuse/head": "^2.0.0",
     "axios": "^1.10.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",

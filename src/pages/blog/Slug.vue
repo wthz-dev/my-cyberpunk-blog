@@ -1,6 +1,8 @@
 <template>
-    <div v-if="post" class="py-12">
-        <!-- <pre>{{ post.data }}</pre> -->
+    <!-- <pre>{{ post?.data }}</pre> -->
+    <LoadingScreen v-if="isLoading" />
+    <div v-else-if="post?.data" class="py-12">
+       
       <div class="container mx-auto px-4">
         <!-- Post Header -->
         <div class="mb-8">
@@ -8,10 +10,10 @@
             <router-link 
               v-for="tag in post.data.tags" 
               :key="tag" 
-              :to="`/tags/${tag}`" 
+              :to="`/tags/${tag.name}`" 
               class="text-sm font-share-tech-mono text-cyber-pink hover:text-cyber-blue transition-colors"
             >
-              #{{ tag }}
+              #{{ tag.name }}
             </router-link>
           </div>
           <h1 class="font-orbitron text-3xl md:text-5xl font-bold mb-4">{{ post.data.title }}</h1>
@@ -97,18 +99,41 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted } from 'vue'
-  import { useRoute } from 'vue-router'
-  import { Calendar, ThumbsUp, ThumbsDown } from 'lucide-vue-next'
-  import MarkdownIt from 'markdown-it'
-  import hljs from 'highlight.js'
-  import NeonButton from '@/components/NeonButton.vue'
-  import { getPostBySlug } from '@/services/postService'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useHead } from '@vueuse/head'
+import { Calendar, ThumbsUp, ThumbsDown } from 'lucide-vue-next'
+import MarkdownIt from 'markdown-it'
+import hljs from 'highlight.js'
+import NeonButton from '@/components/NeonButton.vue'
+import LoadingScreen from '@/components/LoadingScreen.vue'
+import { getPostBySlug } from '@/services/postService'
 
-  
-  const route = useRoute()
+const post = ref(null)
+const isLoading = ref(true)
+const route = useRoute()
 
-  const md = new MarkdownIt({
+// SEO: Set meta tags dynamically
+watch(post, (val) => {
+  if (!val || !val.data) return
+  useHead({
+    title: val.data.title || 'Blog Post',
+    meta: [
+      { name: 'description', content: val.data.description || val.data.title || '' },
+      { property: 'og:title', content: val.data.title || '' },
+      { property: 'og:description', content: val.data.description || val.data.title || '' },
+      { property: 'og:image', content: val.data.image || '' },
+      { property: 'og:type', content: 'article' },
+      { property: 'og:url', content: typeof window !== 'undefined' ? window.location.href : '' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: val.data.title || '' },
+      { name: 'twitter:description', content: val.data.description || val.data.title || '' },
+      { name: 'twitter:image', content: val.data.image || '' },
+    ]
+  })
+}, { immediate: true })
+
+const md = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: true,
@@ -122,10 +147,9 @@
     }
   })
   
-  const post = ref(null)
-  
   onMounted(async () => {
     post.value = await getPostBySlug(route.params.slug)
+    isLoading.value = false
   })
   
   const renderedContent = computed(() => {

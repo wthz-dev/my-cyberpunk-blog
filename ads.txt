@@ -1,0 +1,3 @@
+google.com, pub-8698914796866389, DIRECT, f08c47fec0942fa0
+
+# แทนที่ pub-xxxxxxxxxxxxxxxx ด้วย Publisher ID ของคุณจาก Google AdSense
