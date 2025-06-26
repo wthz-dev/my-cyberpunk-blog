@@ -1,18 +1,18 @@
 <template>
   <div>
     <!-- Hero Section with Cyberpunk Effects -->
-    <section class="py-12 md:py-20 relative overflow-hidden cyberpunk-bg">
+    <section class="py-12 md:py-20 relative overflow-hidden cyberpunk-bg flex items-center min-h-[320px] md:min-h-[480px]">
       <!-- Scanline Overlay -->
       <div class="scanlines"></div>
       
       <!-- Radial Gradient Background -->
       <div class="radial-bg"></div>
       
-      <div class="container mx-auto px-4 relative z-10">
-        <div class="max-w-3xl mx-auto text-center">
-          <div class="cyber-logo-container mb-6" @mouseenter="playHoverSound">
-          <NeonExplosion />
-          <div class="cyber-circuit"></div>
+      <div class="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center h-full">
+        <div class="max-w-3xl w-full text-center">
+          <div class="cyber-logo-container mb-6 flex justify-center items-center" @mouseenter="playHoverSound">
+            <BannerText />
+            <div class="cyber-circuit"></div>
           </div>
           <!-- Animated Logo -->
           <!-- <div class="cyber-logo-container mb-6" @mouseenter="playHoverSound">
@@ -24,7 +24,7 @@
             <div class="cyber-circuit"></div>
           </div> -->
           
-          <p class="font-share-tech-mono text-xl md:text-2xl mb-8 cyber-text">// Exploring the digital frontier of tomorrow</p>
+          <!-- <p class="font-share-tech-mono text-xl md:text-2xl mb-8 cyber-text">// Exploring the digital frontier of tomorrow</p> -->
          
           <!-- <div class="pulse-container">
             <NeonButton color="blue" size="lg" class="pulse-button">
@@ -115,7 +115,8 @@ import PostCard from '@/components/PostCard.vue'
 import { getPosts } from '@/services/postService'
 // หรือถ้าไม่มี postService.js ให้ใช้ axios
 // import axios from 'axios'
-import NeonExplosion from '@/components/NeonExplosion.vue'
+// import NeonExplosion from '@/components/NeonExplosion.vue'
+import BannerText from '@/components/BannerText.vue'
 
 
 // ดึงข้อมูลโพสต์จาก API
@@ -164,7 +165,13 @@ onMounted(async () => {
 const playHoverSound = async () => {
   if (hoverSound) {
     hoverSound.currentTime = 0
-    hoverSound.play()
+    try {
+      await hoverSound.play()
+    } catch (e) {
+      // ป้องกัน error เด้งใน console ถ้า browser block
+      // สามารถ log ได้ถ้าต้องการ debug
+      // console.warn('Play hover sound failed:', e)
+    }
   }
 }
 

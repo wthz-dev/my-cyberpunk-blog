@@ -1,78 +1,116 @@
 <template>
-    <div class="relative">
-      <!-- Banner -->
-      <div 
-        class="cyber-banner text-center text-4xl md:text-6xl font-orbitron font-bold text-cyber-neon cursor-pointer"
-        @mouseenter="triggerExplosion"
-      >
-        <span class="glitch-text" data-text="WHITE'S">WHITE'S</span>
-        <span class="glitch-text" data-text="CYBERPUNK">CYBERPUNK</span>
-        <span class="glitch-text" data-text="BLOG"> BLOG</span>
-      </div>
-      
-      <!-- tsParticles container -->
-      <div id="particles-container" class="absolute inset-0 pointer-events-none z-0"></div>
+  <div class="relative w-full h-48 md:h-64">
+    <canvas ref="canvasRef" class="absolute inset-0 w-full h-full z-0" />
+    <div
+      class="cyber-banner text-center text-4xl md:text-6xl font-orbitron font-bold text-cyber-neon cursor-pointer relative z-10"
+      @mouseenter="triggerExplosion"
+      @click="triggerExplosion"
+    >
+      <span class="glitch-text" data-text="WHITE'S">WHITE'S</span>
+      <span class="glitch-text" data-text="CYBERPUNK">CYBERPUNK</span>
+      <span class="glitch-text" data-text="BLOG"> BLOG</span>
     </div>
-  </template>
-  
-  <script setup>
-import { onMounted, ref } from 'vue'
+  </div>
+</template>
 
-// ใช้การนำเข้าแบบ dynamic import เพื่อหลีกเลี่ยงปัญหา SSR และ version mismatch
-const isParticlesLoaded = ref(false)
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-onMounted(async () => {
-  try {
-    // นำเข้าทั้งสองโมดูลพร้อมกัน
-    const [particles, { loadFull }] = await Promise.all([
-      import('tsparticles-engine'),
-      import('tsparticles')
-    ])
-    
-    const tsParticles = particles.tsParticles
-    await loadFull(tsParticles)
-    isParticlesLoaded.value = true
-    
-    await tsParticles.load("particles-container", {
-      particles: {
-        number: { value: 0 },
-        color: { value: ["#00fff7", "#f6019d", "#fffb00"] },
-        shape: { type: "circle" },
-        opacity: { value: 1 },
-        size: { value: 4 },
-        move: {
-          enable: true,
-          speed: 10,
-          direction: "none",
-          outModes: { default: "destroy" }
-        }
-      }
+const canvasRef = ref(null)
+let ctx = null
+let particles = []
+let animationId = null
+
+const colors = ["#00fff7", "#f6019d", "#fffb00", "#fff", "#0ff", "#f0f"]
+
+function randomBetween(a, b) {
+  return a + Math.random() * (b - a)
+}
+
+function createExplosion(x, y, count = 40) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * 2 * Math.PI
+    const speed = randomBetween(3, 8)
+    particles.push({
+      x,
+      y,
+      radius: randomBetween(2, 6),
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      dx: Math.cos(angle) * speed,
+      dy: Math.sin(angle) * speed,
+      decay: randomBetween(0.01, 0.025)
     })
-  } catch (error) {
-    console.error('ไม่สามารถโหลด particles:', error)
-  }
-})
-
-const triggerExplosion = async () => {
-  try {
-    if (!isParticlesLoaded.value) return
-    
-    const { tsParticles } = await import('tsparticles-engine')
-    const particlesInstance = tsParticles.domItem(0)
-    
-    if (particlesInstance) {
-      particlesInstance.particles.push(50, {
-        position: {
-          x: window.innerWidth / 2,
-          y: 100
-        }
-      })
-    }
-  } catch (error) {
-    console.error('เกิดข้อผิดพลาดในการสร้าง explosion:', error)
   }
 }
-  </script>
+
+function drawParticles() {
+  if (!ctx) return
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  particles.forEach(p => {
+    ctx.save()
+    ctx.globalAlpha = p.alpha
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI)
+    ctx.fillStyle = p.color
+    ctx.shadowColor = p.color
+    ctx.shadowBlur = 16
+    ctx.fill()
+    ctx.restore()
+    // update
+    p.x += p.dx
+    p.y += p.dy
+    p.alpha -= p.decay
+  })
+  particles = particles.filter(p => p.alpha > 0)
+  animationId = requestAnimationFrame(drawParticles)
+}
+
+function triggerExplosion(e) {
+  let x, y
+  const rect = canvasRef.value.getBoundingClientRect()
+  if (e && e.clientX && e.clientY) {
+    x = e.clientX - rect.left
+    y = e.clientY - rect.top
+  } else {
+    x = rect.width / 2
+    y = rect.height / 2
+  }
+  createExplosion(x, y)
+}
+
+onMounted(() => {
+  const canvas = canvasRef.value
+  ctx = canvas.getContext('2d')
+  // Set canvas size
+  function resize() {
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
+  }
+  resize()
+  window.addEventListener('resize', resize)
+  drawParticles()
+  // Initial explosion
+  setTimeout(() => triggerExplosion(), 600)
+})
+
+onBeforeUnmount(() => {
+  if (animationId) cancelAnimationFrame(animationId)
+  window.removeEventListener('resize', resize)
+})
+</script>
+
+<style scoped>
+.cyber-banner {
+  user-select: none;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px #0ff, 0 0 16px #f6019d, 0 0 32px #00fff7;
+}
+canvas {
+  display: block;
+  pointer-events: none;
+}
+</style>
   
   <style scoped>
   .cyber-banner {
